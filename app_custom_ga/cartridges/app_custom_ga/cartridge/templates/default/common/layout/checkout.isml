@@ -28,6 +28,7 @@
         <isprint value="${dw.system.Site.getCurrent().getCustomPreferenceValue('GTMNoScript')}" encoding="off" />
     </isif>
     ${dw.system.HookMgr.callHook('app.template.gtmHeader', 'gtmHeader', pdict) || ''}
+    ${dw.system.HookMgr.callHook('app.template.gtmHeader', 'gtmHeader', pdict) || ''}
 
     <div class="page">
         <isinclude template="/components/header/pageHeaderNomenu" />

@@ -53,9 +53,6 @@
     </isif>
     ${dw.system.HookMgr.callHook('app.template.beforeHeader', 'beforeHeader', pdict) || ''}
     ${dw.system.HookMgr.callHook('app.template.gtmHeader', 'gtmHeader', pdict) || ''}
-    <iscomment>
-        <isinclude url="${URLUtils.url('GTM-HtmlHead')}" />
-    </iscomment>
 
     <div class="page" data-action="${pdict.action}" data-querystring="${pdict.queryString}">
         <isinclude template="/components/header/pageHeader" />
