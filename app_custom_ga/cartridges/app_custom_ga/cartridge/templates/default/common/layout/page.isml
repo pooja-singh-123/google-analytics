@@ -1,0 +1,83 @@
+<iscontent type="text/html" charset="UTF-8" compact="true" />
+
+<isinclude template="/components/modules" sf-toolkit="off" />
+
+<!DOCTYPE html>
+<html lang="${require('dw/util/Locale').getLocale(request.getLocale()).getLanguage()}">
+
+<head>
+    <!--[if gt IE 9]><!-->
+    <isinclude sf-toolkit="off" template="/common/scripts" />
+    <!--<![endif]-->
+    <isinclude template="/common/htmlHead" />
+    <isif condition="${pdict.canonicalUrl}">
+        <link rel="canonical" href="${pdict.canonicalUrl}" />
+    </isif>
+    <isactivedatahead/>
+    <isinclude template="/components/schema" />
+
+    <isif condition="${dw.system.Site.getCurrent().getCustomPreferenceValue('GTMEnable')}" encoding="off">
+        <iscomment>
+            <isprint value="${dw.system.Site.getCurrent().getCustomPreferenceValue('GTMScript')}" encoding="off" />
+        </iscomment>
+        <!-- Google Tag Manager -->
+        <script>
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TBRDQ5X');</script>
+        <!-- End Google Tag Manager -->
+
+        <isif condition="${pdict.gtmData}">
+            <span class="d-none" data-value="${JSON.stringify(pdict.gtmData)}" id="gtmData"></span>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push(JSON.parse(document.getElementById('gtmData').getAttribute('data-value')));
+            </script>
+        </isif>
+    </isif>
+
+</head>
+
+<body>
+    <isif condition="${dw.system.Site.getCurrent().getCustomPreferenceValue('GTMEnable')}" encoding="off">
+        <iscomment>
+            <isprint value="${dw.system.Site.getCurrent().getCustomPreferenceValue('GTMNoScript')}" encoding="off" />
+        </iscomment>
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TBRDQ5X" height="0" width="0"
+                style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+    </isif>
+    ${dw.system.HookMgr.callHook('app.template.beforeHeader', 'beforeHeader', pdict) || ''}
+    ${dw.system.HookMgr.callHook('app.template.gtmHeader', 'gtmHeader', pdict) || ''}
+    <iscomment>
+        <isinclude url="${URLUtils.url('GTM-HtmlHead')}" />
+    </iscomment>
+
+    <div class="page" data-action="${pdict.action}" data-querystring="${pdict.queryString}">
+        <isinclude template="/components/header/pageHeader" />
+        <div role="main" id="maincontent">
+            <isreplace/>
+        </div>
+        <isinclude template="/components/footer/pageFooter" />
+    </div>
+    <div class="error-messaging"></div>
+    <div class="modal-background"></div>
+    <iscontentasset aid="cookie_hint" />
+    <!--[if lt IE 10]>
+            <isinclude sf-toolkit="off" template="/common/scripts" />
+        <![endif]-->
+    <iscomment>
+        hook for Marketing Cloud connector & other integration which need to inject
+        logic at the page end
+        IMPORTANT: Note that this hook will be called to cached as well as uncached pages
+        which means you need to put privacy information into another remote include
+    </iscomment>
+    ${dw.system.HookMgr.callHook('app.template.afterFooter', 'afterFooter', pdict) || ''}
+    <isinclude url="${URLUtils.url('ConsentTracking-Check')}" />
+</body>
+
+</html>
