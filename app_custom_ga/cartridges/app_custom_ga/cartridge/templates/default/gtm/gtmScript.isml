@@ -86,21 +86,8 @@
 
 </script>
 <iscomment>Remote include for customer specific data</iscomment>
-<iscomment>
-    <isinclude url="${URLUtils.url('GTM-CustomerData')}" />
-</iscomment>
+<isinclude url="${URLUtils.url('GTM-CustomerData')}" />
 
 <!-- Google Tag Manager -->
-<iscomment>
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','${pdict.id}');</script>
-</iscomment>
+<isprint value="${dw.system.Site.getCurrent().getCustomPreferenceValue('GTMScript')}" encoding="off" />
 <!-- End Google Tag Manager -->
-
-<iscomment>This is where GTM events are initialized</iscomment>
-<iscomment>
-    <script defer src="${URLUtils.staticURL('/js/tagmanager.js')}"></script>
-</iscomment>

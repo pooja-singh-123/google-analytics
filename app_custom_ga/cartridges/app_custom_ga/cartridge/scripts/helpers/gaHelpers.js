@@ -10,6 +10,54 @@ var gtmga4Enabled = Site.current.getCustomPreferenceValue('GTMGA4Enable') || fal
 var gtmContainerId = Site.current.getCustomPreferenceValue('GTMID') || '';
 
 /**
+ * @param {Object} res - current route response object
+ * @returns {Object} an object of containing customer data
+ */
+function getCustomerData(res) {
+  var system = require('dw/system/System');
+  var customer = res.currentCustomer.raw,
+    profile = customer.profile,
+    session = request.session,
+    customerObject = {};
+
+  customerObject.environment = (system.instanceType === system.PRODUCTION_SYSTEM ? 'production' : 'development');
+  customerObject.demandwareID = customer.ID;
+  customerObject.loggedInState = customer.authenticated;
+  if (res.locale && res.locale.id) {
+    customerObject.locale = res.locale.id;
+  } else {
+    customerObject.locale = Site.current.defaultLocale;
+  }
+  customerObject.currencyCode = session.currency.currencyCode;
+  customerObject.pageLanguage = request.httpLocale;
+  customerObject.registered = customer.registered;
+
+  if (customer.registered && profile != null) {
+    customerObject.email = profile.email.toLowerCase();
+    customerObject.emailHash = dw.crypto.Encoding.toHex(new dw.crypto.MessageDigest('SHA-256').digestBytes(new dw.util.Bytes(profile.email.toLowerCase())));
+    customerObject.user_id = profile.customerNo;
+  } else {
+    var email = (session.custom.email == null) ? '' : session.custom.email;
+    var emailHash = (session.custom.emailHash == null) ? '' : session.custom.emailHash;
+    customerObject.email = email;
+    customerObject.emailHash = emailHash;
+    customerObject.user_id = '';
+  }
+
+  return customerObject;
+}
+
+/**
+ * @returns {Object} an object of containing home page data
+ */
+function getHomeData() {
+  var obj = {
+      'event': 'home'
+  };
+  return obj;
+}
+
+/**
  * @param {Product} product - An instance of a product
  *	@return {Object} Object containing product data
  */
@@ -490,10 +538,10 @@ module.exports = {
   getDataLayer: getDataLayer,
   getProductObject: getProductObject,
   getGA4ProductObject: getGA4ProductObject,
-//   getCustomerData: getCustomerData,
+  getCustomerData: getCustomerData,
 //   getSearchImpressionData: getSearchImpressionData,
   getGA4SearchImpressionData: getGA4SearchImpressionData,
-//   getHomeData: getHomeData,
+  getHomeData: getHomeData,
 //   getPdpData: getPdpData,
   getGA4PdpData: getGA4PdpData,
   getCoupons: getCoupons,
