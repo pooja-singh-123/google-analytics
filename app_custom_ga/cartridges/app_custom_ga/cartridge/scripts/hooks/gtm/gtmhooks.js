@@ -8,7 +8,7 @@ var gaHelpers = require('*/cartridge/scripts/helpers/gaHelpers');
  * Should be executed inside of the head tags
  * Renders GTM code.s
  */
-function gtmHeader(pdict) {
+function htmlHead(pdict) {
   if (gaHelpers.isEnabled) {
     var ga4datalayer = gaHelpers.isGA4Enabled ? gaHelpers.getDataLayer(pdict, true) : false;
 
@@ -24,17 +24,23 @@ function gtmHeader(pdict) {
   }
 }
 
-module.exports = {
-  gtmHeader: gtmHeader
-};
+/**
+ * Should be executed right after body tag
+ * Renders GTM code.
+ */
+function beforeHeader(pdict) {
+  velocity.render('$velocity.remoteInclude(\'GTM-BeforeHeader\')', { velocity: velocity});
+}
 
 // Ensure gtm is enabled before registering hooks
 if (gaHelpers.isEnabled) {
   module.exports = {
-    gtmHeader: gtmHeader
+    htmlHead: htmlHead,
+    beforeHeader: beforeHeader
   };
 } else {
   module.exports = {
-    gtmHeader: function () { }
+    htmlHead: function () {},
+    beforeHeader: function () {}
   };
 }

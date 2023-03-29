@@ -1,0 +1,3 @@
+<!-- Google Tag Manager -->
+<isprint value="${dw.system.Site.getCurrent().getCustomPreferenceValue('GTMNoScript')}" encoding="off" />
+<!-- End Google Tag Manager -->

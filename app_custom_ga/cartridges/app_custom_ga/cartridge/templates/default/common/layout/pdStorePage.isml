@@ -28,25 +28,10 @@
     </isif>
     <isactivedatahead/>
     <isinclude template="/components/schema" />
-    <isif condition="${dw.system.Site.getCurrent().getCustomPreferenceValue('GTMEnable')}" encoding="off">
-        <isprint value="${dw.system.Site.getCurrent().getCustomPreferenceValue('GTMScript')}" encoding="off" />
-        <isif condition="${pdict.gtmData}">
-            <span class="d-none" data-value="${JSON.stringify(pdict.gtmData)}" id="gtmData"></span>
-            <script>
-                window.dataLayer = window.dataLayer || [];
-                window.dataLayer.push(JSON.parse(document.getElementById('gtmData').getAttribute('data-value')));
-            </script>
-        </isif>
-    </isif>
-
 </head>
 
 <body>
-    <iscomment> <isif condition="${dw.system.Site.getCurrent().getCustomPreferenceValue('GTMEnable')}" encoding="off">
-        <isprint value="${dw.system.Site.getCurrent().getCustomPreferenceValue('GTMNoScript')}" encoding="off" />
-    </isif> </iscomment>
     ${dw.system.HookMgr.callHook('app.template.beforeHeader', 'beforeHeader', pdict) || ''}
-    ${dw.system.HookMgr.callHook('app.template.gtmHeader', 'gtmHeader', pdict) || ''}
 
     <div class="page" data-action="${pdict.action}" data-querystring="${pdict.queryString}">
         <isinclude template="/components/header/pdStorePageHeader" />
