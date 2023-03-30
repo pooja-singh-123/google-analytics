@@ -3,7 +3,6 @@
     window.dataLayer = window.dataLayer || [];
     window.gtmEnabled = <isprint value="${pdict.gtmEnabled}" encoding="off"/>;
     var orderId = -1;
-    // var dataLayerEvent = <isprint value="${pdict.datalayer}" encoding="off"/>;
     var ga4DataLayerEvent = <isprint value="${pdict.ga4datalayer}" encoding="off"/>;
 
     // In all cases except Order Confirmation, the data layer should be pushed, so default to that case
@@ -22,9 +21,6 @@
     }
 
     if (pushDataLayer) {
-        // if (dataLayerEvent) {
-        //     dataLayer.push(dataLayerEvent);
-        // }
 
         // If both events active, clear first ecommerce object to prevent events affecting one another
         if (ga4DataLayerEvent) {

@@ -14482,7 +14482,6 @@ var events = {
       var gtmGA4Data = $ele.data('gtmga4data') || $.parseJSON($ele.attr('data-gtmga4data'));
       var qty = $ele.closest('.card').find('select.quantity').val();
       qty = qty || 1;
-      console.log(gtmGA4Data);
       $('body').on('click', '#removeProductModal .cart-delete-confirmation-btn', function () {
         removeFromCartGA4(gtmGA4Data, qty);
       });
@@ -14568,8 +14567,8 @@ $(document).ready(function () {
     }
     events.all();
   }
+  gtmEventLoader();
 });
-
 
 /**
  * listener for ajax events
@@ -14577,8 +14576,6 @@ $(document).ready(function () {
 function gtmEventLoader() {
   try {
     $(document).ajaxSuccess(function (event, request, settings, data) {
-      console.log(settings);
-      console.log(data);
       if (settings.dataTypes.indexOf('json') > -1) {
         if (data && '__gtmEvents' in data && Array.isArray(data.__gtmEvents)) {
           data.__gtmEvents.forEach(function gtmEvent(gtmEvent) {
@@ -14587,6 +14584,12 @@ function gtmEventLoader() {
               dataLayer.push(gtmEvent);
             }
           });
+        }
+
+        if (data && 'gtmEvent' in data) {
+          var gtmData = JSON.parse(data.gtmEvent);
+          dataLayer.push({ ecommerce: null }); // Clear previous ecommerce object to prevent events affecting one another
+          dataLayer.push(gtmData);
         }
       }
     });

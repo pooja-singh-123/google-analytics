@@ -262,129 +262,6 @@ function getGA4ConfirmationData(res) {
   return obj;
 }
 
-
-/**
-* appendProductCategories function is responsible to fetch the product categories
-* @param  { Object } catID Product category
-* @return { Object } Product Categories
-*/
-// function appendProductCategories(catID) {
-//   var productHelper = require('*/cartridge/scripts/helpers/productHelpers');
-//   var showProductPageHelperResult = productHelper.getAllBreadcrumbs(catID, null, []);
-//   var parentCat = {};
-//   for (var pCat = 0; pCat < showProductPageHelperResult.length; pCat++) {
-//     if (showProductPageHelperResult[pCat].htmlValue) {
-//       parentCat['item_category' + (pCat + 1)] = showProductPageHelperResult[pCat].htmlValue;
-//     }
-//   }
-//   return parentCat;
-// }
-
-/**
- * prepareGtmRequest function is responsible to prepare the GTM transactional request
- * @param  {Object} product Product data
- * @return {Object} GTM request
- */
-// function prepareGtmRequest(product, event, quantity, monetaryValue, itemListId, itemListName, selectItem) {
-//   var itemsArray = [];
-//   var data = {};
-//   var currency;
-//   var parentCat = itemListId ? appendProductCategories(itemListId) : {};
-//   if (product.priceModel.price.currencyCode == 'N/A') {
-//     currency = product.priceModel.maxPrice.currencyCode;
-//   } else {
-//     currency = product.priceModel.price.currencyCode;
-//   }
-//   var productArray = {
-//     item_name: product.name,
-//     item_id: product.ID,
-//     affiliation: Resource.msg('label.affiliation.value', 'order', null),
-//     currency: currency,
-//     item_brand: product.brand,
-//     item_list_id: itemListId,
-//     item_list_name: itemListName,
-//         // item_variant: product.custom.categoryStyle && product.custom.categoryStyle != 0 ? product.custom.categoryStyle : product.custom.color,
-//     price: product.priceModel.price.value ? product.priceModel.price.value : product.priceModel.maxPrice.value,
-//     quantity: quantity || '1'
-//   };
-//   var updatedProductArr = Object.assign(productArray, parentCat);
-//   itemsArray.push(updatedProductArr);
-//   data.items = itemsArray;
-//   if (monetaryValue) {
-//     data.currency = productArray.currency;
-//     data.value = productArray.price;
-//   }
-//   if (selectItem) {
-//     data.item_list_id = item_list_id;
-//     data.item_list_name = item_list_name;
-//   }
-//   return {
-//     event: event,
-//     ecommerce: data
-//   };
-// }
-/**
- * prepareGtmRequestList function is responsible to prepare the GTM transactional request
- * @param  {Object} productLineItem Product List data
- * @return {Object} GTM request
- */
-// function prepareGtmRequestList(productLineItem, couponLineItem, event, param, monetaryValue, promotion) {
-//   var itemsArray = [];
-//   var itemCurrency = null;
-//   var itemValue = 0;
-//   for (var i = 0; i < productLineItem.length; i++) {
-//     var item = productLineItem[i];
-//     var parentCat = item.product.primaryCategory ? appendProductCategories(item.product.primaryCategory.ID) : {};
-//     var productArray = {
-//       item_name: item.productName,
-//       item_id: item.productID,
-//       affiliation: Resource.msg('label.affiliation.value', 'order', null),
-//       currency: item.price.currencyCode,
-//       item_brand: item.product.brand,
-//       item_list_id: item.product.primaryCategory ? item.product.primaryCategory.ID : null,
-//       item_list_name: item.product.primaryCategory ? item.product.primaryCategory.displayName : null,
-//             // item_variant: item.product.custom.categoryStyle && item.product.custom.categoryStyle != 0 ? item.product.custom.categoryStyle : item.product.custom.color,
-//       price: item.price.value ? item.price.value : 0,
-//       quantity: item.quantityValue
-//     };
-//     itemValue += productArray.price;
-//     itemCurrency = productArray.currency;
-//     var updatedProductArr = Object.assign(productArray, parentCat);
-//     itemsArray.push(updatedProductArr);
-//   }
-//   var data = {};
-//   if (monetaryValue) {
-//     data.currency = itemCurrency;
-//     data.value = itemValue.toFixed(2);
-//     if (!empty(couponLineItem)) {
-//       var couponParam = [];
-//       var iter = couponLineItem.iterator();
-//       while (iter.hasNext()) {
-//         var couponData = iter.next();
-//         if (couponData.applied == true) {
-//           couponParam.push(couponData.couponCode);
-//         }
-//       }
-//       data.coupon = couponParam.toString(' | ');
-//     }
-//   }
-
-//   if (promotion) {
-//     data.promotion_name = promotion;
-//   }
-
-//   if (event == 'add_shipping_info') {
-//     data.shipping_tier = param;
-//   } else if (event == 'add_payment_info') {
-//     data.payment_type = param;
-//   }
-//   data.items = itemsArray;
-//   return {
-//     event: event,
-//     ecommerce: data
-//   };
-// }
-
 /**
  * @param {Object} res - current route response object
  * @returns {Object} an object of containing pdp data
@@ -519,10 +396,6 @@ function getDataLayer(res, ga4) {
         return module.exports.getGA4CheckoutData('view_cart');
       case 'Checkout-Begin':
         return module.exports.getGA4CheckoutData('begin_checkout');
-      case 'CheckoutShippingServices-SubmitShipping':
-        return module.exports.getGA4CheckoutData('add_shipping_info');
-      case 'CheckoutServices-SubmitPayment':
-        return module.exports.getGA4CheckoutData('add_payment_info');
       case 'Order-Confirm':
         return module.exports.getGA4ConfirmationData(res);
       default:
@@ -539,10 +412,8 @@ module.exports = {
   getProductObject: getProductObject,
   getGA4ProductObject: getGA4ProductObject,
   getCustomerData: getCustomerData,
-//   getSearchImpressionData: getSearchImpressionData,
   getGA4SearchImpressionData: getGA4SearchImpressionData,
   getHomeData: getHomeData,
-//   getPdpData: getPdpData,
   getGA4PdpData: getGA4PdpData,
   getCoupons: getCoupons,
   getConfirmationData: getConfirmationData,
@@ -550,8 +421,6 @@ module.exports = {
 //   getConfirmationActionFieldObject: getConfirmationActionFieldObject,
   getProductArrayFromList: getProductArrayFromList,
   getSearchProducts: getSearchProducts,
-//   getOrderProductObject: getOrderProductObject,
   getGA4OrderProductObject: getGA4OrderProductObject,
-//   getCheckoutData: getCheckoutData,
   getGA4CheckoutData: getGA4CheckoutData
 };
