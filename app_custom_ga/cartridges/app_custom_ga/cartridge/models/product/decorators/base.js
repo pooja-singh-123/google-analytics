@@ -6,11 +6,6 @@ var gaHelpers = require('*/cartridge/scripts/helpers/gaHelpers');
 module.exports = function (object, apiProduct, type) {
     base.call(this, object, apiProduct, type);
 
-    Object.defineProperty(object, 'gtmData', {
-        enumerable: true,
-        value: gaHelpers.getProductObject(apiProduct)
-    });
-
     Object.defineProperty(object, 'gtmGA4Data', {
         enumerable: true,
         value: gaHelpers.getGA4ProductObject(apiProduct),
