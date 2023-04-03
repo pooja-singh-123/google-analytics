@@ -11,4 +11,10 @@ module.exports = function (object, apiProduct, type) {
         value: gaHelpers.getGA4ProductObject(apiProduct),
         writable: true
     });
+
+    Object.defineProperty(object, 'gtmItemList', {
+        enumerable: true,
+        value: gaHelpers.getGA4ListObject(apiProduct),
+        writable: true
+    });
 };

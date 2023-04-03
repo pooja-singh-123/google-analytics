@@ -122,6 +122,24 @@ function getGA4ProductObject(product) {
 
 
 /**
+ * @param {Product} product - An instance of a product
+ *	@return {Object} Object containing product data
+ */
+ function getGA4ListObject(product) {
+  var obj = {};
+  if (product.categories && product.categories.length > 0) {
+    var prodCat = product.categories[product.categories.length -1];
+    obj.item_list_id = prodCat.ID;
+    obj.item_list_name = prodCat.displayName;
+  } else {
+    obj.item_list_id = 'home';
+    obj.item_list_name = 'home';
+  }
+  return obj;
+}
+
+
+/**
  * @param {dw.util.Iterator} productList - Iterator composed of Products, ProductListItems, or ProductLineItems
  * @param {Function} callback - Callback that constructs the object that will be added to the returned Array
  * @param {Boolean} ga4 - is a GA4 event
@@ -422,5 +440,6 @@ module.exports = {
   getProductArrayFromList: getProductArrayFromList,
   getSearchProducts: getSearchProducts,
   getGA4OrderProductObject: getGA4OrderProductObject,
-  getGA4CheckoutData: getGA4CheckoutData
+  getGA4CheckoutData: getGA4CheckoutData,
+  getGA4ListObject: getGA4ListObject
 };

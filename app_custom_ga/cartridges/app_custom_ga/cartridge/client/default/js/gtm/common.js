@@ -11,10 +11,12 @@ var events = {
   productshow: function () {},
   productshowincategory: function () {},
   searchshow: function () {
-    $('body').on('click', '.product .image-container a:not(.quickview), .product .pdp-link a', function () {
+    $('body').on('click', '.product .image-container a:not(.quickview), .product .pdp-link a', function (e) {
       var $ele = $(this).closest('.product');
-      var gtmdata = $ele.data('gtmdata') || $.parseJSON($ele.attr('data-gtmdata'));
-      productClick(gtmdata);
+      var gtmdata = $ele.data('gtmga4data') || $.parseJSON($ele.attr('data-gtmga4data'));
+      var itemlistid = $ele.data('itemlistid') || $ele.attr('data-itemlistid');
+      var itemlistname = $ele.data('itemlistname') || $ele.attr('data-itemlistname');
+      productClick(gtmdata, itemlistid, itemlistname);
     });
   },
   cartshow: function () {},
@@ -56,17 +58,17 @@ var events = {
  * @param {String} productId The product ID
  * @description gets the data for a product click
  */
-function productClick(productObject) {
+function productClick(productObject, itemlistid, itemlistname) {
   var obj = {
-    event: 'productClick',
+    event: 'select_item',
     ecommerce: {
-      click: {
-        actionField: { list: 'Search Results' },
-        products: []
-      }
+      item_list_id: itemlistid,
+      item_list_name: itemlistname,
+      items: []
     }
   };
-  obj.ecommerce.click.products.push(productObject);
+  obj.ecommerce.items.push(productObject);
+  dataLayer.push({ ecommerce: null }); // Clear previous ecommerce object to prevent events affecting one another
   dataLayer.push(obj);
 }
 
