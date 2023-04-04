@@ -67,31 +67,7 @@ function removeFromCartGA4(productObject, quantity) {
  * events that are needed are initialized.
  */
 var events = {
-  homeshow: function () {
-    $('.subscribe-email').on('click', function (e) {
-      var userEmail = $('.home-email-signup').find('input[name="hpEmailSignUp"]').val();
-      if (userEmail) {
-        $(document).ajaxSuccess(function () {
-          var visited = window.localStorage.getItem('gtmloadDataVisited');
-          var obj = {};
-          userEmail = $('.home-email-signup').find('input[name="hpEmailSignUp"]').val();
-          var gtmData = {
-            userEmail: userEmail
-          };
-          if (visited !== 'true') {
-            var obj = {
-              event: 'newsletter_subscription',
-              ecommerce: gtmData
-            };
-            window.localStorage.setItem('gtmloadDataVisited', true);
-            dataLayer.push({ ecommerce: null }); // Clear previous ecommerce object to prevent events affecting one another
-            dataLayer.push(obj);
-          }
-        });
-        window.localStorage.setItem('gtmloadDataVisited', false);
-      }
-    });
-  },
+  homeshow: function () {},
   productshow: function () {},
   productshowincategory: function () {},
   searchshow: function () {
