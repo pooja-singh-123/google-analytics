@@ -11534,63 +11534,50 @@ function displayMessage(data, button) {
     $.spinner().stop();
     var status;
     if (data.success) {
-        status = "alert-success";
+        status = 'alert-success';
     } else {
-        status = "alert-danger";
+        status = 'alert-danger';
     }
 
-    if ($(".email-signup-message").length === 0) {
-        $("body").append('<div class="email-signup-message"></div>');
+    if ($('.email-signup-message').length === 0) {
+        $('body').append(
+           '<div class="email-signup-message"></div>'
+        );
     }
-    $(".email-signup-message").append(
-        '<div class="email-signup-alert text-center ' +
-            status +
-            '">' +
-            data.msg +
-            "</div>"
-    );
+    $('.email-signup-message')
+        .append('<div class="email-signup-alert text-center ' + status + '">' + data.msg + '</div>');
 
     setTimeout(function () {
-        $(".email-signup-message").remove();
-        button.removeAttr("disabled");
+        $('.email-signup-message').remove();
+        button.removeAttr('disabled');
     }, 3000);
 }
 
 module.exports = function () {
-    $(".back-to-top").click(function () {
+    $('.back-to-top').click(function () {
         scrollAnimate();
     });
 
-    $(".subscribe-email").on("click", function (e) {
+    $('.subscribe-email').on('click', function (e) {
         e.preventDefault();
-        console.log("iiiiiiiiiiiiiii");
-        var url = $(this).data("href");
+        var url = $(this).data('href');
         var button = $(this);
-        var emailId = $("input[name=hpEmailSignUp]").val();
+        var emailId = $('input[name=hpEmailSignUp]').val();
         $.spinner().start();
-        $(this).attr("disabled", true);
+        $(this).attr('disabled', true);
         $.ajax({
             url: url,
-            type: "post",
-            dataType: "json",
+            type: 'post',
+            dataType: 'json',
             data: {
-                emailId: emailId,
+                emailId: emailId
             },
             success: function (data) {
                 displayMessage(data, button);
-                console.log("start with us");
-                window.dataLayer = window.dataLayer || [];
-                window.dataLayer.push({
-                    event: "newsletter_signup",
-                    ecommerce: {
-                        email: emailId,
-                    },
-                });
-                console.log("guest user");
             },
             error: function (err) {
                 displayMessage(err, button);
-            },
+            }
         });
     });
 };
@@ -14441,61 +14428,10 @@ module.exports = function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+/* eslint-disable max-len */
 
 
 var base = __webpack_require__(12);
-
-/**
- * Events are divided up by name space so only the
- * events that are needed are initialized.
- */
-var events = {
-  homeshow: function () {},
-  productshow: function () {},
-  productshowincategory: function () {},
-  searchshow: function () {
-    $('body').on('click', '.product .image-container a:not(.quickview), .product .pdp-link a', function (e) {
-      var $ele = $(this).closest('.product');
-      var gtmdata = $ele.data('gtmga4data') || $.parseJSON($ele.attr('data-gtmga4data'));
-      var itemlistid = $ele.data('itemlistid') || $ele.attr('data-itemlistid');
-      var itemlistname = $ele.data('itemlistname') || $ele.attr('data-itemlistname');
-      productClick(gtmdata, itemlistid, itemlistname);
-    });
-  },
-  cartshow: function () {},
-  checkoutbegin: function () {},
-  orderconfirm: function () {},
-  // events that should happen on every page
-  all: function () {
-      // Add to Cart
-    $('body').on('click', '.add-to-cart, .add-to-cart-global', function () {
-      if (!$(this).hasClass('isDisabled') && !$(this).hasClass('disabled')) {
-        var $ele = $(this);
-        var gtmGA4Data = $ele.data('gtmga4data') || $.parseJSON($ele.attr('data-gtmga4data'));
-        var qty = $ele.closest('.product-wrapper').find('.quantity-select').val();
-        qty = qty || 1;
-        addToCartGA4(gtmGA4Data, qty);
-      }
-    });
-
-      // Remove from Cart
-    $('body').on('click', '.remove-product', function () {
-      var $ele = $(this);
-      var gtmGA4Data = $ele.data('gtmga4data') || $.parseJSON($ele.attr('data-gtmga4data'));
-      var qty = $ele.closest('.card').find('select.quantity').val();
-      qty = qty || 1;
-      $('body').on('click', '#removeProductModal .cart-delete-confirmation-btn', function () {
-        removeFromCartGA4(gtmGA4Data, qty);
-      });
-    });
-
-      // Update GTM data attribute
-    $('body').on('product:updateAddToCart', function (e, response) {
-      $('button.add-to-cart, button.add-to-cart-global', response.$productContainer)
-              .attr('data-gtmga4data', JSON.stringify(response.product.gtmGA4Data));
-    });
-  }
-};
 
 /**
  * @param {String} productId The product ID
@@ -14556,21 +14492,82 @@ function removeFromCartGA4(productObject, quantity) {
   dataLayer.push(obj);
 }
 
-
 /**
- * @function init
- * @description Initialize the tag manager functionality
- * @param {String} nameSpace The current name space
+ * Events are divided up by name space so only the
+ * events that are needed are initialized.
  */
-$(document).ready(function () {
-  if (window.gtmEnabled) {
-    if (pageAction && events[pageAction]) {
-      events[pageAction]();
-    }
-    events.all();
+var events = {
+  homeshow: function () {
+    $('.subscribe-email').on('click', function (e) {
+      var userEmail = $('.home-email-signup').find('input[name="hpEmailSignUp"]').val();
+      if (userEmail) {
+        $(document).ajaxSuccess(function () {
+          var visited = window.localStorage.getItem('gtmloadDataVisited');
+          var obj = {};
+          userEmail = $('.home-email-signup').find('input[name="hpEmailSignUp"]').val();
+          var gtmData = {
+            userEmail: userEmail
+          };
+          if (visited !== 'true') {
+            var obj = {
+              event: 'newsletter_subscription',
+              ecommerce: gtmData
+            };
+            window.localStorage.setItem('gtmloadDataVisited', true);
+            dataLayer.push({ ecommerce: null }); // Clear previous ecommerce object to prevent events affecting one another
+            dataLayer.push(obj);
+          }
+        });
+        window.localStorage.setItem('gtmloadDataVisited', false);
+      }
+    });
+  },
+  productshow: function () {},
+  productshowincategory: function () {},
+  searchshow: function () {
+    $('body').on('click', '.product .image-container a:not(.quickview), .product .pdp-link a', function (e) {
+      var $ele = $(this).closest('.product');
+      var gtmdata = $ele.data('gtmga4data') || $.parseJSON($ele.attr('data-gtmga4data'));
+      var itemlistid = $ele.data('itemlistid') || $ele.attr('data-itemlistid');
+      var itemlistname = $ele.data('itemlistname') || $ele.attr('data-itemlistname');
+      productClick(gtmdata, itemlistid, itemlistname);
+    });
+  },
+  cartshow: function () {},
+  checkoutbegin: function () {},
+  orderconfirm: function () {},
+  // events that should happen on every page
+  all: function () {
+      // Add to Cart
+    $('body').on('click', '.add-to-cart, .add-to-cart-global', function () {
+      if (!$(this).hasClass('isDisabled') && !$(this).hasClass('disabled')) {
+        var $ele = $(this);
+        var gtmGA4Data = $ele.data('gtmga4data') || $.parseJSON($ele.attr('data-gtmga4data'));
+        var qty = $ele.closest('.product-wrapper').find('.quantity-select').val();
+        qty = qty || 1;
+        addToCartGA4(gtmGA4Data, qty);
+      }
+    });
+
+      // Remove from Cart
+    $('body').on('click', '.remove-product', function () {
+      var $ele = $(this);
+      var gtmGA4Data = $ele.data('gtmga4data') || $.parseJSON($ele.attr('data-gtmga4data'));
+      var qty = $ele.closest('.card').find('select.quantity').val();
+      qty = qty || 1;
+      $('body').on('click', '#removeProductModal .cart-delete-confirmation-btn', function () {
+        removeFromCartGA4(gtmGA4Data, qty);
+      });
+    });
+
+      // Update GTM data attribute
+    $('body').on('product:updateAddToCart', function (e, response) {
+      $('button.add-to-cart, button.add-to-cart-global', response.$productContainer)
+              .attr('data-gtmga4data', JSON.stringify(response.product.gtmGA4Data));
+    });
   }
-  gtmEventLoader();
-});
+};
+
 
 /**
  * listener for ajax events
@@ -14587,8 +14584,7 @@ function gtmEventLoader() {
             }
           });
         }
-        console.log(data);
-          if (data && 'gtmEvent' in data) {
+        if (data && 'gtmEvent' in data) {
           var gtmData = JSON.parse(data.gtmEvent);
           dataLayer.push({ ecommerce: null }); // Clear previous ecommerce object to prevent events affecting one another
           dataLayer.push(gtmData);
@@ -14600,6 +14596,22 @@ function gtmEventLoader() {
     console.error(e);
   }
 }
+
+/**
+ * @function init
+ * @description Initialize the tag manager functionality
+ * @param {String} nameSpace The current name space
+ */
+$(document).ready(function () {
+  if (window.gtmEnabled) {
+    if (pageAction && events[pageAction]) {
+      events[pageAction]();
+    }
+    events.all();
+  }
+  gtmEventLoader();
+  window.localStorage.setItem('gtmloadDataVisited', false);
+});
 
 /**
 * setup ajax event listener
