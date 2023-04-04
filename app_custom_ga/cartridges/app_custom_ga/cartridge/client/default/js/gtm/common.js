@@ -249,9 +249,22 @@ $(document).ajaxComplete(function (event, jqxhr, settings) {
             });
         }
     }
-});
 
-//jQuery(".bv-write-review , .bv-form-actions-submit").click();
+    if (
+        jqxhr.responseJSON.action === "EmailSubscribe-Subscribe" &&
+        !jqxhr.responseJSON.error &&
+        !jqxhr.responseJSON.fields &&
+        jqxhr.responseJSON.success
+    ) {
+        console.log("newsletters");
+        window.dataLayer.push({
+            event: "newsletter_subscription",
+            ecommerce: {
+                email: $("input[name='hpEmailSignUp']").val(),
+            },
+        });
+    }
+});
 
 /**
  * setup ajax event listener
